@@ -36,6 +36,7 @@ Rotating pr ilu kl whwh chu thaapqz lu upuh
 +12 ==> bd uxg wx itit otg ftmmbcl xg gbgt False
 +13 ==> ce vyh xy juju puh gunncdm yh hchu False
 Found it  -7 ==> ik ben de papa van mattijs en nina
+
 ```
 
 
@@ -87,3 +88,16 @@ python3 transposition.py "ieajnk nsa p   bame epan nat    tn dvii "
  39 ==> iajnk nsa p   bame epan nat    tn dvii e False
 
 ```
+
+
+## Substitute key
+
+You can or give key or it will try all keys and test the results for 60% dictionary matches
+
+```
+python3 substitute.py "Sk fax oa blbl qlx nljsvr ax xsxl" -k "LFWOAYUISVKMNXPBDCRJTQEGHZ"
+Valid key: True
+key: LFWOAYUISVKMNXPBDCRJTQEGHZ ==> Ik ben de papa van matijs en nina (True)
+
+```
+
