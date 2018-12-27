@@ -21,9 +21,8 @@ def substitute(c):
     return(c)
 
 def main(argv):
-  parser = argparse.ArgumentParser(description='Decode a message hidden by a Caesar cipher.')
+  parser = argparse.ArgumentParser(description='Show frequency of letters')
   parser.add_argument('cipher')
-  parser.add_argument('-r', '--rot', default=0, type=int, help='Number of places to rotate the alphabet (-13 to +13)')
   args=parser.parse_args()
   cipher=args.cipher
 
