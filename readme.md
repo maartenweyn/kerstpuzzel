@@ -110,3 +110,20 @@ python3 freq.py "Ik ben de papa van matijs en nina"
 {'A': 5, 'B': 1, 'C': 0, 'D': 1, 'E': 3, 'F': 0, 'G': 0, 'H': 0, 'I': 3, 'J': 1, 'K': 1, 'L': 0, 'M': 1, 'N': 5, 'O': 0, 'P': 2, 'Q': 0, 'R': 0, 'S': 1, 'T': 1, 'U': 0, 'V': 1, 'W': 0, 'X': 0, 'Y': 0, 'Z': 0, 'other': 7}
 [('other', 7), ('A', 5), ('N', 5), ('E', 3), ('I', 3), ('P', 2), ('B', 1), ('D', 1), ('J', 1), ('K', 1), ('M', 1), ('S', 1), ('T', 1), ('V', 1), ('C', 0), ('F', 0), ('G', 0), ('H', 0), ('L', 0), ('O', 0), ('Q', 0), ('R', 0), ('U', 0), ('W', 0), ('X', 0), ('Y', 0), ('Z', 0)]
 ```
+
+## vigenere
+
+```
+
+python3 vigenere.py "yk kun mu pjfa eqn vqtcyjb un wynj" -k 3
+
+
+Found it (6, 24, 9) ==> ei tal va nsly nwl ewrlehk al fels
+Found it (6, 24, 23) ==> ei hal ja ngly bwl swrzehy al telg
+Found it (10, 0, 17) ==> ik ben de papa van mattijs en nina
+Found it (10, 0, 22) ==> ik gen ie pfpa aan ratyijx en sinf
+Found it (10, 0, 23) ==> ik hen je pgpa ban satzijy en ting
+Found it (14, 5, 3) ==> mp nis pi umtf hes yeyfmoe is zmsm
+Found it (14, 5, 8) ==> mp sis ui urtf mes deykmoj is emsr
+
+```
