@@ -1,3 +1,12 @@
+## needed packages
+
+```
+sudo apt-get install hunspell libhunspell-dev
+sudo pip3 install hunspell
+
+```
+
+
 
 ## Ceasar code
 Tests all possible keys and test if at least tests if at least 60% of the words are in the dictionary

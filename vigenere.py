@@ -4,7 +4,7 @@ import sys
 import hunspell
 import itertools
 
-dict = hunspell.HunSpell('/Library/Spelling/nl_NL.dic', '/Library/Spelling/nl_NL.aff')
+dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 f= open("vigenere.txt","a")
 
 success = []
@@ -98,11 +98,13 @@ def main(argv):
   parser.add_argument('-t', '--test', default=0, help='only test key length for dict')
   parser.add_argument('-s', '--start', default=0, type=int, help='Length of key')
   parser.add_argument('-p', '--stop', default=0, type=int, help='Length of key')
+  parser.add_argument('-v', '--vebose', default=0, type=int, help='Verbose')
 
   args=parser.parse_args()
   cipher=args.cipher
   key = args.key
   keylength = args.keylength
+  verbose = args.vebose
 
   
   print('Cipher {0}\n'.format(cipher))
@@ -135,9 +137,9 @@ def main(argv):
         output2 += c
       index += 1
 
-   
-    print('{0} ==> {1}'.format(key, output1))
-    print('{0} ==> {1}'.format(key, output2))
+    if verbose:
+      print('{0} ==> {1}'.format(key, output1))
+      print('{0} ==> {1}'.format(key, output2))
   else:
 
     if keylength == 0:
@@ -194,8 +196,8 @@ def main(argv):
         else:
           indic = False
 
-          
-        print('{0} ==> {1} {2}'.format(key, output, indic))
+        if verbose:  
+          print('{0} ==> {1} {2}'.format(key, output, indic))
 
         if (indic):
           success.append({"key":key, "output":output})
@@ -250,8 +252,8 @@ def main(argv):
         else:
           indic = False
 
-          
-        print('{0} ==> {1} {2}'.format(key, output, indic))
+        if verbose:  
+          print('{0} ==> {1} {2}'.format(key, output, indic))
 
         if (indic):
           success.append({"key":key, "output":output})
