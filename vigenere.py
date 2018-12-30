@@ -101,7 +101,7 @@ def main(argv):
   parser.add_argument('-v', '--vebose', default=0, type=int, help='Verbose')
 
   args=parser.parse_args()
-  cipher=args.cipher
+  cipher=args.cipher.lower()
   key = args.key
   keylength = args.keylength
   verbose = args.vebose
