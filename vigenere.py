@@ -3,11 +3,14 @@ import sys
 
 import hunspell
 import itertools
+import multiprocessing
 
 dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 f= open("vigenere.txt","a")
 
 success = []
+
+print (print("Number of cpu : ", multiprocessing.cpu_count()))
 
 ## based on https://github.com/dnlongen/CaesarsHelper/blob/master/caesar.py
 
@@ -228,32 +231,54 @@ def main(argv):
           if ord(c.lower()) in range(97,123):
             output += (substitute(c,r))
             index += 1
+        
             #print (index, index % keylength, c, output)
-          else:
-            output += c
+          #else:
+          #  output += c
 
-        if args.test:
-          words = output[:keylength]
-        else:
-          words = output.split()
+        #if args.test:
+        #  words = output[:keylength]
+        #else:
+        #  words = output.split()
           
         indiccount = 0
-        for word in words:
-        # print the word
-          testdict = dict.spell(word)
-          if (testdict):
-            indiccount += 1
-          #print(word, testdict)
+        # for word in words:
+        # # print the word
+        #   testdict = dict.spell(word)
+        #   if (testdict):
+        #     indiccount += 1
+        #   #print(word, testdict)
 
-        if (indiccount > len(words) * 0.6):
+        start = 0
+        antwoord = {}
+        while len(output[start:]) > 3:
+          wordFound = False
+          #print (words, len(words))
+          for i in range(len(output[start:]), 3, -1):
+            #print("testing {0} at {1} to {2}".format(words[:i], start, i))
+            #if (len(words[:i]) > 3):
+              if (dict.spell(output[start:start+i])):
+                #if words[:i] not in antwoord:
+                antwoord[output[start:start+i]] = [start, i, len(output[start:start+i])]
+                indiccount += 1
+                start += i
+                wordFound = True
+                break
+          if (not wordFound):
+            start += 1
+
+
+        #print (antwoord)
+
+        if (indiccount > 5):
           indic = True
-          f.write('{0} ==> {1} {2}\n'.format(key, output, indic))
+          f.write('{3}: {0} ==> {1} {2} \n'.format(key, output, indic, indiccount))
           f.flush()
         else:
           indic = False
 
         if verbose:  
-          print('{0} ==> {1} {2}'.format(key, output, indic))
+          print('{3}: {0} ==> {1} {2} '.format(key, output, indic, indiccount))
 
         if (indic):
           success.append({"key":key, "output":output})
