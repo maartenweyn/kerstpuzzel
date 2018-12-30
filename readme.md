@@ -124,7 +124,7 @@ python3 freq.py "Ik ben de papa van matijs en nina"
 
 ```
 
-python3 vigenere.py "yk kun mu pjfa eqn vqtcyjb un wynj" -k 3
+python3 vigenere.py "yk kun mu pjfa eqn vqtcyjb un wynj" -l 3
 
 
 Found it (6, 24, 9) ==> ei tal va nsly nwl ewrlehk al fels

@@ -12,7 +12,6 @@ f= open("vigenere.txt","a")
 
 success = []
 cipher = ''
-verbose = 1
 
 print("Number of cpu : ", multiprocessing.cpu_count())
 
@@ -98,6 +97,7 @@ def test_key(data):
 
     key = data[0]
     cipher = data[1]
+    verbose = data[2]
     #  keytupple = (10, 0)
     #print (keytupple)
     #print (key)
@@ -151,7 +151,6 @@ def test_key(data):
 def main(argv):
   global f
   global success
-  global verbose
 
   p = Pool(multiprocessing.cpu_count())
 
@@ -279,7 +278,7 @@ def main(argv):
           key = key_prefix
           for i in keytupple:
             key += LETTERS[i]
-          keys.append([key, cipher])
+          keys.append([key, cipher, verbose])
           
         print("starting with ", key_prefix, len(keys) )
         p.map(test_key, keys)
