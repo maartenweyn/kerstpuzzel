@@ -5,12 +5,16 @@ import hunspell
 import itertools
 import multiprocessing
 
+from multiprocessing import Pool
+
 dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 f= open("vigenere.txt","a")
 
 success = []
+cipher = ''
+verbose = 1
 
-print (print("Number of cpu : ", multiprocessing.cpu_count()))
+print("Number of cpu : ", multiprocessing.cpu_count())
 
 ## based on https://github.com/dnlongen/CaesarsHelper/blob/master/caesar.py
 
@@ -89,10 +93,67 @@ def search_tupple(cipher, key, max_length):
         success.append({"key":key, "output":output2})
     f.flush()
   
+def test_key(data):
+    global verbose
+
+    key = data[0]
+    cipher = data[1]
+    #  keytupple = (10, 0)
+    #print (keytupple)
+    #print (key)
+
+    index = 0
+    output = ''
+    #print ("cipher", cipher)
+    for c in cipher:
+      r = key[index % len(key)]
+      if ord(c.lower()) in range(97,123):
+        #output += (substitute(c,r))
+        output += (substitute(c,ord(r.lower())-97))
+        index += 1
+      
+    indiccount = 0
+
+    start = 0
+    antwoord = {}
+    while len(output[start:]) > 3:
+      wordFound = False
+      #print (words, len(words))
+      for i in range(len(output[start:]), 3, -1):
+        #print("testing {0} at {1} to {2}".format(words[:i], start, i))
+        #if (len(words[:i]) > 3):
+          if (dict.spell(output[start:start+i])):
+            #if words[:i] not in antwoord:
+            antwoord[output[start:start+i]] = [start, i, len(output[start:start+i])]
+            indiccount += 1
+            start += i
+            wordFound = True
+            break
+      if (not wordFound):
+        start += 1
+
+
+    #print (antwoord)
+
+    if (indiccount > 5):
+      indic = True
+      f.write('{3}: {0} ==> {1} {2} \n'.format(key, output, indic, indiccount))
+      f.flush()
+    else:
+      indic = False
+
+    if verbose:  
+      print('{3}: {0} ==> {1} {2} '.format(key, output, indic, indiccount))
+
+    if (indic):
+      success.append({"key":key, "output":output})
 
 def main(argv):
   global f
   global success
+  global verbose
+
+  p = Pool(multiprocessing.cpu_count())
 
   parser = argparse.ArgumentParser(description='Decode a message hidden by a vigenere cipher.')
   parser.add_argument('cipher')
@@ -162,10 +223,6 @@ def main(argv):
       #  keytupple = (10, 0)
         #print (keytupple)
 
-        key = ''
-        for i in keytupple:
-          key += LETTERS[i]
-
         search_tupple(cipher, key, args.stop)
 
         index = 0
@@ -210,78 +267,25 @@ def main(argv):
       f.write('keylength {0}\n'.format(keylength))
       f.flush()
       
-      # Can be explicitly provided on the command line, or is the default value if none provided
-      print('Rotating {0}\n'.format(cipher))
-
       success = []
+      
+      for keytupple_prefix in itertools.product(range(26), repeat=2):
+        keys = []
+        key_prefix = ''
+        for i in keytupple_prefix:
+          key_prefix += LETTERS[i]
 
-      #if True:
-      for keytupple in itertools.product(range(26), repeat=keylength):
-      #  keytupple = (10, 0)
-        #print (keytupple)
-
-        key = ''
-        for i in keytupple:
-          key += LETTERS[i]
-
-        index = 0
-        output = ''
-        for c in cipher:
-          r = keytupple[index % keylength]
-          if ord(c.lower()) in range(97,123):
-            output += (substitute(c,r))
-            index += 1
-        
-            #print (index, index % keylength, c, output)
-          #else:
-          #  output += c
-
-        #if args.test:
-        #  words = output[:keylength]
-        #else:
-        #  words = output.split()
+        for keytupple in itertools.product(range(26), repeat=keylength-2):
+          key = key_prefix
+          for i in keytupple:
+            key += LETTERS[i]
+          keys.append([key, cipher])
           
-        indiccount = 0
-        # for word in words:
-        # # print the word
-        #   testdict = dict.spell(word)
-        #   if (testdict):
-        #     indiccount += 1
-        #   #print(word, testdict)
+        print("starting with ", key_prefix, len(keys) )
+        p.map(test_key, keys)
+        print("ending ", key_prefix)
 
-        start = 0
-        antwoord = {}
-        while len(output[start:]) > 3:
-          wordFound = False
-          #print (words, len(words))
-          for i in range(len(output[start:]), 3, -1):
-            #print("testing {0} at {1} to {2}".format(words[:i], start, i))
-            #if (len(words[:i]) > 3):
-              if (dict.spell(output[start:start+i])):
-                #if words[:i] not in antwoord:
-                antwoord[output[start:start+i]] = [start, i, len(output[start:start+i])]
-                indiccount += 1
-                start += i
-                wordFound = True
-                break
-          if (not wordFound):
-            start += 1
-
-
-        #print (antwoord)
-
-        if (indiccount > 5):
-          indic = True
-          f.write('{3}: {0} ==> {1} {2} \n'.format(key, output, indic, indiccount))
-          f.flush()
-        else:
-          indic = False
-
-        if verbose:  
-          print('{3}: {0} ==> {1} {2} '.format(key, output, indic, indiccount))
-
-        if (indic):
-          success.append({"key":key, "output":output})
+      
 
     if (len(success) > 0):
       for item in success:
