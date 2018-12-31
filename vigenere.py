@@ -102,6 +102,9 @@ def test_key(data):
     #print (keytupple)
     #print (key)
 
+    f.write('{0}\n'.format(key))
+    f.flush()
+
     index = 0
     output = ''
     #print ("cipher", cipher)
@@ -110,7 +113,7 @@ def test_key(data):
       if ord(c.lower()) in range(97,123):
         #output += (substitute(c,r))
         output += (substitute(c,ord(r.lower())-97))
-        index += 1
+      index += 1
       
     indiccount = 0
 
