@@ -8,8 +8,13 @@ from multiprocessing import Pool
 import re
 
 import operator
-
+from collections import Counter
+from math import factorial
 dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
+
+def npermutations(l):
+    num = factorial(len(l))
+    return num
 
 def test_string(keytupple):
   #print(keytupple)
@@ -44,16 +49,25 @@ def main(argv):
   puzzle = args.cipher
   threshold = args.threshold
 
+  puzzle_lenght = len(puzzle)
+
   answer = {}
 
-  print("generating test values..")
+  print ("length of puzzle", puzzle_lenght)
+
+  nr_strings = npermutations(puzzle)
+
+  print("generating test values.." , nr_strings)
+
+  counter = 0
 
   with multiprocessing.Pool() as pool: # default is optimal number of processes
         #results = pool.map(do_stuff, itertools.permutations('1234', r=4))
         for line, indiccount in pool.imap_unordered(test_string, itertools.permutations(puzzle)):
-          
+          counter += 1
+          print("Progress: {}%".format(int(100 * counter/nr_strings)), end="\r", flush=True)
           if indiccount >= threshold:
-            print (line, indiccount)
+            print ("\n", line, indiccount)
             answer[line] = indiccount
 
   print("...done")
