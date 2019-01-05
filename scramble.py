@@ -12,6 +12,8 @@ from collections import Counter
 from math import factorial
 dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 
+import time
+
 def npermutations(l):
     num = factorial(len(l))
     return num
@@ -49,28 +51,37 @@ def main(argv):
   puzzle = args.cipher
   threshold = args.threshold
 
-  puzzle_lenght = len(puzzle)
+  
+
+  print ("Puzzle: ", puzzle)
+
+  simplified = ''.join([i for i in puzzle if  i.isalpha()])
 
   answer = {}
+  puzzle_lenght = len(simplified)
   print ("length of puzzle", puzzle_lenght)
 
-  nr_strings = npermutations(puzzle)
+  nr_strings = npermutations(simplified)
 
   print("generating test values.." , nr_strings)
 
-  f.write('Test: {0} ==> {1}\n\n\n'.format(puzzle, nr_strings))
+  f.write('Test: {0} ==> {1}\n\n\n'.format(simplified, nr_strings))
   f.flush()
 
   counter = 0
   progress = 100.0
 
+  starttime = time.time()
   with multiprocessing.Pool() as pool: # default is optimal number of processes
         #results = pool.map(do_stuff, itertools.permutations('1234', r=4))
-        for line, indiccount in pool.imap_unordered(test_string, itertools.permutations(puzzle)):
+        for line, indiccount in pool.imap_unordered(test_string, itertools.permutations(simplified)):
           counter += 1
           new_progress = int(100000 * counter/nr_strings)/1000
-          if new_progress != progress:
-            print("Progress: {}%".format(new_progress), end="\r", flush=True)
+          if (new_progress != progress) or (counter % 100000 == 0):
+            current_time = time.time()
+            difference = int(current_time - starttime)
+            remaining_time = (difference * nr_strings / counter) / 3600
+            print("Progress: {0}% - {1} values - {2} hours remaining".format(new_progress, counter, remaining_time), end="\r", flush=True)
             progress = new_progress
           if indiccount >= threshold:
             print ("\n", line, indiccount)
