@@ -28,7 +28,7 @@ def test_string(keytupple):
   indiccount = 0
   for word in words:
   # print the word
-    if (len(word) > 1):
+    if (len(word) > 2):
       testdict = dict.spell(word)
       if (testdict):
         indiccount += 1
@@ -39,7 +39,7 @@ def test_string(keytupple):
   return teststring, indiccount
 
 def main(argv):
-  #p = Pool(multiprocessing.cpu_count())
+  f= open("scramble.txt","a")
 
   parser = argparse.ArgumentParser(description='test all position combination of the letters and count the number of words which are in a dictionary')
   parser.add_argument('cipher')
@@ -52,23 +52,31 @@ def main(argv):
   puzzle_lenght = len(puzzle)
 
   answer = {}
-
   print ("length of puzzle", puzzle_lenght)
 
   nr_strings = npermutations(puzzle)
 
   print("generating test values.." , nr_strings)
 
+  f.write('Test: {0} ==> {1}\n\n\n'.format(puzzle, nr_strings))
+  f.flush()
+
   counter = 0
+  progress = 100.0
 
   with multiprocessing.Pool() as pool: # default is optimal number of processes
         #results = pool.map(do_stuff, itertools.permutations('1234', r=4))
         for line, indiccount in pool.imap_unordered(test_string, itertools.permutations(puzzle)):
           counter += 1
-          print("Progress: {}%".format(int(100 * counter/nr_strings)), end="\r", flush=True)
+          new_progress = int(100000 * counter/nr_strings)/1000
+          if new_progress != progress:
+            print("Progress: {}%".format(new_progress), end="\r", flush=True)
+            progress = new_progress
           if indiccount >= threshold:
             print ("\n", line, indiccount)
             answer[line] = indiccount
+            f.write('{0} ==> {1}\n'.format(line, indiccount))
+            f.flush()
 
   print("...done")
   
@@ -76,6 +84,9 @@ def main(argv):
 
   for item in sorted_answer:
       print(item)
+      f.write('{0}\n'.format(item))
+
+  f.close() 
 
 
   
