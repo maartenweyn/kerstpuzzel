@@ -5,17 +5,17 @@ import hunspell
 
 dict = hunspell.HunSpell('/Library/Spelling/nl_NL.dic', '/Library/Spelling/nl_NL.aff')
 
-puzzle ='''VHARAKIRIKA
-UMCEEHTNRRM
-LOVSTODUOEI
-KDUIIUSINWH
-AEETSTOKJES
-NRNTISADODO
-ENRJTNEIARR
-NIUYAENRZAI
-EILANDENYAH
-JGNIVEBDRAA
-LEECONOMIEG'''
+puzzle ='''SAHAHWPHEWY
+XZQRNIWMXNZ
+KYHVQRJWUYU
+DPOXWWTDVYU
+SCQXLNKIBHL
+YAKVUMDDGHM
+UAQZIMBQDGU
+JOZRKLNGROF
+GJRNQMSMZOJ
+IVBBVINJJTS
+VSONETPZWPG'''
 
 wordgrid = puzzle.replace(' ','').lower()
 length = wordgrid.index('\n')+1
