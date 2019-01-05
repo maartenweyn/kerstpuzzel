@@ -23,7 +23,7 @@ def test_string(keytupple):
   indiccount = 0
   for word in words:
   # print the word
-    if (len(word) > 2):
+    if (len(word) > 1):
       testdict = dict.spell(word)
       if (testdict):
         indiccount += 1
