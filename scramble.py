@@ -13,22 +13,27 @@ from math import factorial
 dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 
 import time
+from functools import partial
 
 def npermutations(l):
     num = factorial(len(l))
     return num
 
-def test_string(keytupple):
+def test_string(cap, keytupple):
   #print(keytupple)
 
-  teststring = ''
+  teststring = cap
   for i in keytupple:
     teststring += i
 
   words = re.findall(r"[\w']+", teststring)
 
-  indiccount = 0
-  for word in words:
+  indiccount = dict.spell(words[0])
+
+  if indiccount == 0:
+    return teststring, 0
+
+  for word in words[1:]:
   # print the word
     if (len(word) > 2):
       testdict = dict.spell(word)
@@ -55,13 +60,26 @@ def main(argv):
 
   print ("Puzzle: ", puzzle)
 
-  simplified = ''.join([i for i in puzzle if  i.isalpha()])
+  simplified = ''
+  caps = ''
+
+  for i in puzzle:
+    if i.isalpha():
+      if i.isupper():
+        caps += i
+      else:
+        simplified += i
+
+
+  print("Caps   ", caps)
+  print("others ", simplified)
+    
 
   answer = {}
   puzzle_lenght = len(simplified)
   print ("length of puzzle", puzzle_lenght)
 
-  nr_strings = npermutations(simplified)
+  nr_strings = npermutations(simplified) * npermutations(caps)
 
   print("generating test values.." , nr_strings)
 
@@ -74,20 +92,31 @@ def main(argv):
   starttime = time.time()
   with multiprocessing.Pool() as pool: # default is optimal number of processes
         #results = pool.map(do_stuff, itertools.permutations('1234', r=4))
-        for line, indiccount in pool.imap_unordered(test_string, itertools.permutations(simplified)):
-          counter += 1
-          new_progress = int(100000 * counter/nr_strings)/1000
-          if (new_progress != progress) or (counter % 100000 == 0):
-            current_time = time.time()
-            difference = int(current_time - starttime)
-            remaining_time = (difference * nr_strings / counter) / 3600
-            print("Progress: {0}% - {1} values - {2} hours remaining".format(new_progress, counter, remaining_time), end="\r", flush=True)
-            progress = new_progress
-          if indiccount >= threshold:
-            print ("\n", line, indiccount)
-            answer[line] = indiccount
-            f.write('{0} ==> {1}%\n'.format(line, indiccount))
-            f.flush()
+        for cap in caps:
+          print ("Cap", cap)
+          capindex = caps.find(cap)
+          other_caps = caps[:capindex] + caps[capindex+1:]
+          print ("Other Caps", other_caps)
+
+          func = partial(test_string, cap)
+
+          for line, indiccount in pool.imap_unordered(func, itertools.permutations(other_caps + simplified)):
+            counter += 1
+            new_progress = int(100000 * counter/nr_strings)/1000
+            if (new_progress != progress) or (counter % 100000 == 0):
+              current_time = time.time()
+              difference = int(current_time - starttime)
+              remaining_time = (difference * nr_strings / counter) / 3600
+              print("Progress: {0}% - {1} values - {2} hours remaining".format(new_progress, counter, remaining_time), end="\r", flush=True)
+              progress = new_progress
+            if indiccount >= threshold:
+              print ("\n", line, indiccount)
+              answer[line] = indiccount
+              f.write('{0} ==> {1}%\n'.format(line, indiccount))
+              f.flush()
+
+        pool.close()
+        pool.join()
 
   print("\n\n...done")
   
