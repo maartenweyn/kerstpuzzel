@@ -34,16 +34,16 @@ def test_string(keytupple):
         indiccount += 1
       #print(word, testdict)
 
-  #print (words, " ->", indiccount)
+ #print (teststring, int(100 * indiccount / len(words)))
 
-  return teststring, indiccount
+  return teststring, int(100 * indiccount / len(words))
 
 def main(argv):
   f= open("scramble.txt","a")
 
   parser = argparse.ArgumentParser(description='test all position combination of the letters and count the number of words which are in a dictionary')
   parser.add_argument('cipher')
-  parser.add_argument('-t', '--threshold', default=1, type=int, help='minimim number of words')
+  parser.add_argument('-t', '--threshold', default=70, type=int, help='minimim percentage of words to be know')
 
   args=parser.parse_args()
   puzzle = args.cipher
@@ -75,10 +75,10 @@ def main(argv):
           if indiccount >= threshold:
             print ("\n", line, indiccount)
             answer[line] = indiccount
-            f.write('{0} ==> {1}\n'.format(line, indiccount))
+            f.write('{0} ==> {1}%\n'.format(line, indiccount))
             f.flush()
 
-  print("...done")
+  print("\n\n...done")
   
   sorted_answer = sorted(answer.items(), key=operator.itemgetter(1), reverse=True)
 
