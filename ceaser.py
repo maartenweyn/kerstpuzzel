@@ -13,25 +13,26 @@ def substitute(c,r):
   "Rotate the character by rot characters; wrap if >Z or <A"
   if c.isalpha():
     if ord(c) in range(97,123):
-      if ord(c)+r in range(97,123):
+      if ord(c)-r in range(97,123):
         #print(c, " --> ", ord(c), " --> ", ord(c)+r, " --> ", chr(ord(c)+r))
-        return chr(ord(c)+r)
-      elif ord(c)+r > 122:
+        return chr(ord(c)-r)
+      elif ord(c)-r > 122:
         #print(c, " --> ", ord(c), " --> ", ord(c)+r-26, " --> ", chr(ord(c)+r))
-        return chr(ord(c)+r-26)
-      elif ord(c)+r < 97:
-        return chr(ord(c)+r+26)
+        return chr(ord(c)-r-26)
+      elif ord(c)-r < 97:
+        return chr(ord(c)-r+26)
       else:
         print ('this should not happen')
     elif ord(c) in range(65,91):
-      if ord(c)+r in range(65,91):
-        #print(c, " --> ", ord(c), " --> ", ord(c)+r, " --> ", chr(ord(c)+r))
-        return chr(ord(c)+r)
-      elif ord(c)+r > 90:
-        #print(c, " --> ", ord(c), " --> ", ord(c)+r, " --> ", chr(ord(c)+r))
-        return chr(ord(c)+r-26)
-      elif ord(c)+r < 65:
-        return chr(ord(c)+r+26)
+      if ord(c)-r in range(65,91):
+        #print(c, " --> ", ord(c), " --> ", ord(c)-r, " --> ", chr(ord(c)-r))
+        return chr(ord(c)-r)
+      elif ord(c)-r > 90:
+        #print(c, " --> ", ord(c), " --> ", ord(c)-r-26, " --> ", chr(ord(c)-r-26))
+        return chr(ord(c)-r-26)
+      elif ord(c)-r < 65:
+        #print(c, " --> ", ord(c), " --> ", ord(c)-r+26, " --> ", chr(ord(c)-r+26))
+        return chr(ord(c)-r+26)
       else:
         print ('this should not happen')
     else:
