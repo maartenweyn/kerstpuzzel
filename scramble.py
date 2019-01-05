@@ -9,7 +9,7 @@ import re
 
 import operator
 
-dict = hunspell.HunSpell('/Library/Spelling/nl_NL.dic', '/Library/Spelling/nl_NL.aff')
+dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 
 def test_string(keytupple):
   #print(keytupple)
