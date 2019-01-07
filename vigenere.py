@@ -102,8 +102,8 @@ def test_key(data):
     #print (keytupple)
     #print (key)
 
-    f.write('{0}\n'.format(key))
-    f.flush()
+    #f.write('{0}\n'.format(key))
+    #f.flush()
 
     index = 0
     output = ''
