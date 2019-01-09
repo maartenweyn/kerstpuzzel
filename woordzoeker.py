@@ -117,5 +117,16 @@ def search_words(puzzle):
 
   return antwoord, results
 
+def main(argv):
+  parser = argparse.ArgumentParser(description='Decode a message hidden by a vigenere cipher.')
+  parser.add_argument('cipher')
+
+  args=parser.parse_args()
+  cipher=args.cipher.lower()
+
+  search_words(cipher)
+
+
 if __name__ == "__main__":
-  search_words(puzzle)
+  #search_words(puzzle)
+  main(sys.argv[1:])
