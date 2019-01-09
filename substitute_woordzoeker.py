@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from functools import partial
 
 
-dict = hunspell.HunSpell('/Library/Spelling/nl_NL.dic', '/Library/Spelling/nl_NL.aff')
+dict = hunspell.HunSpell('Spelling/nl_NL.dic', 'Spelling/nl_NL.aff')
 
 
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
