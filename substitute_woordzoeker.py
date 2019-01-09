@@ -5,6 +5,11 @@ import itertools
 
 import hunspell
 
+import multiprocessing
+from multiprocessing import Pool
+from functools import partial
+
+
 dict = hunspell.HunSpell('/Library/Spelling/nl_NL.dic', '/Library/Spelling/nl_NL.aff')
 
 
@@ -54,6 +59,20 @@ def substitute(message, key):
 
   return translated
 
+
+def test_tupple(cipher, keytupple):
+  #print (keytupple)
+  key = ''
+  for i in keytupple:
+    key += i
+  #print (key)
+  
+  #if not key in tested_keys:
+  output = substitute(cipher, key)
+  count, words = search_words(output)
+
+  return count, output, key, words
+
 def main(argv):
   parser = argparse.ArgumentParser(description='Test substitution in woordzoeker')
   parser.add_argument('cipher')
@@ -64,27 +83,42 @@ def main(argv):
 
   best_results = []
 
-  for keytupple in itertools.permutations(LETTERS, len(LETTERS)):
-    #print (keytupple)
-    key = ''
-    for i in keytupple:
-      key += i
-    #print (key)
-    
-    #if not key in tested_keys:
-    output = substitute(cipher, key)
-    count, words = search_words(output)
-
-    if len(best_results) <= 50:
-      best_results.append([count, output, key, words])
-      print('{0} ==> {1} ({2}) {3}'.format(count, output, key, words))
-    else:
-      if count > best_results[50][0]:
-        best_results[50] = [count, output, key, words]
+  func = partial(test_tupple, cipher)
+  with multiprocessing.Pool() as pool: # default is optimal number of processes
+    for count, output, key, words in pool.imap_unordered(func, itertools.permutations(LETTERS, len(LETTERS))):
+      if len(best_results) <= 50:
+        best_results.append([count, output, key, words])
         print('{0} ==> {1} ({2}) {3}'.format(count, output, key, words))
+      else:
+        if count > best_results[50][0]:
+          best_results[50] = [count, output, key, words]
+          print('{0} ==> {1} ({2}) {3}'.format(count, output, key, words))
 
-    best_results = sorted(best_results, key=lambda x: x[1], reverse=True)
+      best_results = sorted(best_results, key=lambda x: x[1], reverse=True)
 
+    
+
+
+  # for keytupple in itertools.permutations(LETTERS, len(LETTERS)):
+    # #print (keytupple)
+    # key = ''
+    # for i in keytupple:
+    #   key += i
+    # #print (key)
+    
+    # #if not key in tested_keys:
+    # output = substitute(cipher, key)
+    # count, words = search_words(output)
+
+    # if len(best_results) <= 50:
+    #   best_results.append([count, output, key, words])
+    #   print('{0} ==> {1} ({2}) {3}'.format(count, output, key, words))
+    # else:
+    #   if count > best_results[50][0]:
+    #     best_results[50] = [count, output, key, words]
+    #     print('{0} ==> {1} ({2}) {3}'.format(count, output, key, words))
+
+    # best_results = sorted(best_results, key=lambda x: x[1], reverse=True)
 
   print ("sorted:")
   for result in best_results:
