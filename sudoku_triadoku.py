@@ -83,7 +83,7 @@ def solveSudokuTrial(grid,  i=0, j=0):
                         grid[i][j] = e
                         if solveSudokuTrial(grid, i, j):
                                 print("Found Solution: ", grid, grid[1][1], grid[8][6], grid[4][5])
-                                # return True
+                                return True
                         # Undo the current cell for backtracking
                         grid[i][j] = 0
         return False
@@ -135,8 +135,8 @@ def solveSudoku(grid, i=0, j=0):
                         return False
 
 
-input[0][7] = 8
+input[0][7] = 2
 input[1][8] = 1
-input[2][6] = 5
+input[2][6] = 8
 
 solveSudoku(input)
