@@ -204,7 +204,7 @@ def solveQuasidoku(grid, i=0, j=0):
                 if isValidQuasidoku(grid,i,j,e):
                         grid[i][j] = e
                         if solveQuasidoku(grid, i, j):
-                                print("Found Solution: ", grid)
+                                print("Found Solution: ", grid, grid[5][1], grid[4][6], grid[0][2])
                                 # return True
                         # Undo the current cell for backtracking
                         grid[i][j] = 0
@@ -240,7 +240,7 @@ def solveQuasidoku(grid, i=0, j=0):
 #solve2Sudokus(inputQuasidoku, inputLovedoku, link)
 
 
-#solveQuasidoku(inputQuasidoku)
+solveQuasidoku(inputQuasidoku)
 
-solveLovedoku(inputLovedoku2)
+#solveLovedoku(inputLovedoku2)
 #solveSubLovedoku(inputsubLovedoku2)
