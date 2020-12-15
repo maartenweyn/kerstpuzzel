@@ -8,7 +8,7 @@ def findoptions(grid, isValidSudoku, end):
         nr_options = 0
         for i in range (0, len(grid)):
                 sq_options = []
-                # print("len", i, len(grid[i]))
+                print("len", i, len(grid[i]))
                 for j in range (0, len(grid[i])):
                         cell_options = []
                         # print("testing option", i, j)
@@ -18,12 +18,13 @@ def findoptions(grid, isValidSudoku, end):
                         else:
                                 if (grid[i][j] == 0):
                                         for e in range(1,end+1):
+                                                print("testing option", i, j, e)
                                                 if isValidSudoku(grid,i,j,e):
                                                         cell_options.append(e)
-                                                        # print("adding option", i, j, e)
+                                                        print("adding option", i, j, e)
                                 else:
                                         cell_options.append(grid[i][j])
-                                        # print("adding defaults", i, j, grid[i][j])
+                                        print("adding defaults", i, j, grid[i][j])
                         if (len(cell_options) > 1):
                                 nr_options += len(cell_options)
                         sq_options.append(cell_options)

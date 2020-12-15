@@ -3,12 +3,14 @@ import sys
 
 from sudoku import * 
 
-input = [[0,0,2,0,0,5,1,0],[9,8,1,0,0,0,0,0],[0,0,0,0,0,0,3,6],[0,0,1,5,0,0,0,0],[0,0,0,0,0,0,0,1],[6,10,0,0,0,0,0,0],[0,0,0,0,0,0,0,10],[1,0,0,0,4,0,0,8,0],[0,0,0,4,0,7,0,0]]
-inputConstrained = [[0,0,2,0,0,5,1,[3,8]],[9,8,0,0, [2,5,7],[3,5,7],0,0],[0,0,0, [2,5,7],0,0,3,6],[[3,8],0,1,5,0,0,0,0],[0,[3,6],0,0,0,0,0,1],[6,10,0,0,0,0,0,0],[0,0,0,0,[2,3,8],0,0,10],[1,0,0,[2,3,8],4,0,0,8,0],[0,0,0,4,0,7,0,[2,5,7]]]
-#inputConstrained = [[0,0,2,0,0,5,1,3],[9,8,0,0, 7,3,0,0],[0, 0,0, 7,0, 0,3, 6],[3,0,1,5,0,0,0,0],[0,6,0,0,0,0,0,1],[6,10,0,0,0,0,0,0],[0,0,0,0,2,0,0,10],[1,0,0,2,4,0,0,8,0],[0,0,0,4,0,7,0,2]]
+#input = [[0,0,2,0,0,5,1,0],[9,8,1,0,0,0,0,0],[0,0,0,0,0,0,3,6],[0,0,1,5,0,0,0,0],[0,0,0,0,0,0,0,1],[6,10,0,0,0,0,0,0],[0,0,0,0,0,0,0,10],[1,0,0,0,4,0,8,0],[0,0,0,4,0,7,0,0]]
+input = [[0,0,2,0,0,5,1,[3,8]],[9,8,0,0, [2,5,7],[3,5,7],0,0],[0,0,0, [2,5,7],0,0,3,6],[[3,8],0,1,5,0,0,0,0],[0,[3,6],0,0,0,0,0,1],[6,10,0,0,0,0,0,0],[0,0,0,0,[2,3,8],0,0,10],[1,0,0,[2,3,8],4,0,8,0],[0,0,0,4,0,7,0,[2,5,7]]]
+#input = [[7,8,2,4,6,5,1,3],[9,8,2,6, 7,3,10,4],[4,5,1, 7,9 , 10,3 ,6],[3,6,1,5,8,9,2,4],[4,6,10,8,3,7,2,1],[6,10,9,3,4,7,1,8],[4,6,5,1,2,9,8,10],[1,6,3,2,4,7,8,5],[0,0,0,4,0,7,0,[2,5,7]]]
 
 
 def isValidSudoku(grid, i, j, e):
+        temp = grid[i][j]
+        grid[i][j] = 0
         testlist = [grid[i][x] for x in range(len(grid[i]))]
         squareOk = testlist.count(e) == 0
 
@@ -44,24 +46,26 @@ def isValidSudoku(grid, i, j, e):
                         rowOk = testlist.count(e) == 0
                         # print("rowOk", i, j, e, testlist.count(e), rowOk, testlist)
                         if (not rowOk):
+                                grid[i][j] = temp
                                 return False
 
                 if (j == 0):
-                        columnOk = all([e != grid[jj+x*3][0] for x in range(3)]) and all([e != grid[jj+x*3][1] for x in range(3)])  and all([e != grid[jj+x*3][2] for x in range(3)]) and all([e != grid[jj+x*3][5] for x in range(3)])  and all([e != grid[jj+x*3][6] for x in range(3)]) and (e != grid[jj+6][7])
-                        
+                        testlist = [grid[jj][0], grid[jj][1], grid[jj][5], grid[jj][2], grid[jj][6], grid[jj+3][0], grid[jj+3][1], grid[jj+3][5], grid[jj+3][2], grid[jj+3][6], grid[jj+6][0], grid[jj+6][1], grid[jj+6][5], grid[jj+6][2], grid[jj+6][6], grid[jj+6][7]]
                 if (j == 7):
-                        columnOk = all([e != grid[jj+x*3][7] for x in range(3)]) and all([e != grid[jj+x*3][1] for x in range(3)])  and all([e != grid[jj+x*3][2] for x in range(3)]) and all([e != grid[jj+x*3][5] for x in range(3)])  and all([e != grid[jj+x*3][6] for x in range(3)]) and (e != grid[jj+6][0])
+                        testlist = [grid[jj][0], grid[jj][1], grid[jj][5], grid[jj][2], grid[jj][6], grid[jj][7], grid[jj+3][1], grid[jj+3][5], grid[jj+3][2], grid[jj+3][6], grid[jj+3][7], grid[jj+6][1], grid[jj+6][5], grid[jj+6][2], grid[jj+6][6], grid[jj+6][7]]
+                        
+                if (((j == 1) or (j==5)) and (ii != 1)) or (((j == 2) or (j==6)) and (ii == 1)): 
+                        testlist = [grid[jj][0], grid[jj][1], grid[jj][5], grid[jj+3][0], grid[jj+3][2], grid[jj+3][6], grid[jj+6][0], grid[jj+6][1], grid[jj+6][5], grid[jj+6][7]]
    
-                if (((j == 1) or (j == 5)) and ((ii == 0) or (ii == 2))) or (((j == 2) or (j == 6)) and ((ii == 1))):
-                        columnOk = all([e != grid[jj+x*3][0] for x in range(3)]) and (e != grid[jj][2])  and (e != grid[jj][6])   and (e != grid[jj+3][1])   and (e != grid[jj+3][5]) and (e != grid[jj+6][2])   and (e != grid[jj+6][6]) and (e != grid[jj+6][7])
-
-                if (((j == 2) or (j == 6)) and ((ii == 0) or (ii == 2))) or (((j == 1) or (j == 5)) and ((ii == 1))):
-                        columnOk = all([e != grid[jj+x*3][0] for x in range(3)]) and (e != grid[jj][1])  and (e != grid[jj][5])   and (e != grid[jj+3][2])   and (e != grid[jj+3][6]) and (e != grid[jj+6][1])   and (e != grid[jj+6][5]) and (e != grid[jj+6][7])
-
+                if (((j == 1) or (j==5)) and (ii == 1)) or (((j == 2) or (j==6)) and (ii != 1)): 
+                        testlist = [grid[jj][0], grid[jj][2], grid[jj][6], grid[jj+3][0], grid[jj+3][1], grid[jj+3][5], grid[jj+6][0], grid[jj+6][2], grid[jj+6][6], grid[jj+6][7]]
+   
 
                 if ((j != 3) and (j != 4)):
-                        # print("columnOk", i, j, e, columnOk)
+                        columnOk = testlist.count(e) == 0
+                        # print("columnOk", i, j, e, testlist.count(e), columnOk, testlist)
                         if (not columnOk):
+                                grid[i][j] = temp
                                 return False
 
 
@@ -93,21 +97,32 @@ def isValidSudoku(grid, i, j, e):
 
                         # print("neighbourok", neighbourok)
                         if neighbourok:
+                                grid[i][j] = temp
                                 return True
         
+        grid[i][j] = temp
         return False
 
 
 def solveSudokuTrial(grid,  x, return_dic, options, solutions, i=0, j=0): 
         i,j = findNextCellToFill(grid, i, j)
+
+
+        
         if i == -1:
-                return_dic[x] = True
-                return True
+                return_dic[x] = isValidSudoku(grid, 0, 0, grid[0][0])
+                print ("solveSudokuTrial only options", return_dic[x])
+                if (return_dic[x]):
+                        print("Found Solution: ", grid, grid[8][7], grid[0][7], grid[4][1], grid[2][3], grid[7][3], grid[1][5]) 
+                        solution = grid[8][7] * 100000 + grid[0][7] * 10000 + grid[4][1] * 1000 + grid[2][3] * 100 + grid[7][3] * 10 +  grid[1][5]
+                        if not solution in solutions:
+                                solutions.append(solution)
+                return return_dic[x]
         #for e in range(1,10):
         return_dic[x] = False
+
         
         for e in options[i][j]:
-                # print ("testing ", e, "from", options[i][j], "for", i, j)
                 if isValidSudoku(grid,i,j,e):
                         grid[i][j] = e
                         if j == 4:
@@ -182,9 +197,9 @@ def main(argv):
         if args.varl != 0:
                 input[1][5] = args.varl
 
-        print("INPUT", inputConstrained)
+        print("INPUT", input)
 
-        solveSudoku(inputConstrained, solveSudokuTrial, isValidSudoku, 10)
+        solveSudoku(input, solveSudokuTrial, isValidSudoku, 10)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
